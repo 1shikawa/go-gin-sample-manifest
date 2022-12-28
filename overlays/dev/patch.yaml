@@ -1,0 +1,6 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cicd-demo-by-go
+spec:
+  replicas: 2

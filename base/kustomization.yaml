@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ingress.yaml
+  - service.yaml
+  - deployment.yaml
+images:
+  - name: 949993607219.dkr.ecr.ap-northeast-1.amazonaws.com/cicd-dev:latest
+    newName: 949993607219.dkr.ecr.ap-northeast-1.amazonaws.com/cicd-dev
+    newTag: 887c80de57e91d2c41320988dfc4336eff6ddcac

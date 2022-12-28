@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cicd-demo-by-go
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: cicd-demo-by-go
+  template:
+    metadata:
+      labels:
+        app: cicd-demo-by-go
+    spec:
+      containers:
+        - image: 949993607219.dkr.ecr.ap-northeast-1.amazonaws.com/cicd-dev:latest
+          name: cicd-demo-by-go
+          ports:
+            - containerPort: 80

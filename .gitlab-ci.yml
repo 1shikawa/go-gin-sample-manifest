@@ -1,0 +1,40 @@
+stages:
+  - validate
+  - secure
+  - audit
+
+validate_by_kubeconform:
+  stage: validate
+  before_script:
+    - env | grep kubeconform
+  image:
+    name: kiwicom/kubeconform
+    entrypoint: [""]
+  script:
+    - apk --no-cache add curl bash
+    - curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+    - ./kustomize build ./overlays/dev
+    - ./kustomize build ./overlays/dev | kubeconform -summary -output json
+
+secure_by_trivy:
+  stage: secure
+  image:
+    name: aquasec/trivy
+    entrypoint: [""]
+  script:
+    - apk --no-cache add curl bash
+    - curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+    - ./kustomize build ./overlays/dev > manifest.yaml
+    - cat manifest.yaml
+    - trivy config --exit-code 0 --severity HIGH,CRITICAL manifest.yaml
+
+audit_by_polaris:
+  stage: audit
+  script:
+    - apt-get update && apt-get install -y curl
+    - curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+    - mkdir manifest
+    - ./kustomize build ./overlays/dev > manifest/manifest.yaml
+    - curl -LO https://github.com/FairwindsOps/polaris/releases/download/6.0.0/polaris_linux_amd64.tar.gz
+    - tar -zxvf polaris_linux_amd64.tar.gz
+    - ./polaris audit --audit-path ./manifest/ --format=pretty
