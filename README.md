@@ -1,6 +1,6 @@
-# Manifest
+# go-gin-sample-manifest
 以下サンプルアプリのマニフェストコードリポジトリです。 \
-https://gitlab.opencanvasatelier.com/com001/application/sampleapp_1
+https://github.com/1shikawa/go-gin-webapi
 
 # Kustomize によるデプロイマニフェストの確認
 ```
@@ -38,4 +38,4 @@ spec:
         ports:
         - containerPort: 80
 ```
-# go-gin-sample-manifest
+
